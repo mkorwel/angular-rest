@@ -1,12 +1,12 @@
 package pl.mkorwel.angularjs.sample.store;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
+import java.util.stream.Collectors;
 
 import pl.mkorwel.angularjs.sample.domain.User;
+import pl.mkorwel.angularjs.sample.domain.UserFilter;
 import pl.mkorwel.angularjs.sample.domain.UserStatus;
 
 public class UserStore {
@@ -21,8 +21,13 @@ public class UserStore {
 
 	}
 
-	public List<User> getAll() {
-		return new LinkedList<User>(userMap.values());
+	public List<User> getAll(UserFilter filter) {
+		return userMap
+				.values()
+				.stream()
+				.filter((user) -> nameIsCorrect(filter, user)
+						&& statusIsCorrect(filter, user))
+				.collect(Collectors.toList());
 	}
 
 	public User get(long id) {
@@ -43,6 +48,21 @@ public class UserStore {
 
 	public void activate(long id) {
 		userMap.get(id).setStatus(UserStatus.ACTIVATED);
+	}
+
+	private boolean statusIsCorrect(UserFilter filter, User user) {
+		return filter.getStatus() == null
+				|| user.getStatus() == filter.getStatus();
+	}
+
+	private boolean nameIsCorrect(UserFilter filter, User user) {
+		if (filter.getFilterName() == null) {
+			return true;
+		}
+		String filterName = filter.getFilterName().toLowerCase();
+		return user.getName().toLowerCase().contains(filterName)
+				|| user.getSurname().toLowerCase().contains(filterName)
+				|| user.getUsername().toLowerCase().contains(filterName);
 	}
 
 }

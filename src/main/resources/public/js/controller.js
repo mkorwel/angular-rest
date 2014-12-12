@@ -24,6 +24,16 @@ myApp.controller("UsersController", function($scope, $http){
 		$scope.users = data;
 	});
 	
+	$scope.filter = {};
+	
+	$scope.refresh = function(){
+		$http.get("rest/users", {
+		    params: { filterName: $scope.filter.name, filterStatus: $scope.filter.status }
+		}).success(function (data){
+			$scope.users = data;
+		});
+	}
+	
 	$scope.remove = function(id){
 		$http.delete("rest/users/" + id).success(function (){
 		});

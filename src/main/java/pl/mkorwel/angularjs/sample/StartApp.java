@@ -10,6 +10,7 @@ import static spark.SparkBase.staticFileLocation;
 import com.google.gson.Gson;
 
 import pl.mkorwel.angularjs.sample.domain.User;
+import pl.mkorwel.angularjs.sample.domain.UserFilter;
 import pl.mkorwel.angularjs.sample.store.UserStore;
 import spark.Request;
 
@@ -23,12 +24,13 @@ public class StartApp {
 
 		staticFileLocation("/public");
 
-		get("/rest/users", "application/json", (req, res) -> store.getAll(),
-				new JsonTransformer());
-		
+		get("/rest/users", "application/json", (req, res) -> {
+			return store.getAll(new UserFilter(req.queryParams("filterName"),
+					req.queryParams("filterStatus")));
+		}, new JsonTransformer());
+
 		get("/rest/users/:id", "application/json",
-				(req, res) -> store.get(getIdParam(req)),
-				new JsonTransformer());
+				(req, res) -> store.get(getIdParam(req)), new JsonTransformer());
 
 		post("/rest/users/", (req, res) -> {
 			User user = store.save(gson.fromJson(req.body(), User.class));

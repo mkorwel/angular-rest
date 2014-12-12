@@ -16,17 +16,16 @@ public class User implements Serializable {
 
 	private UserStatus status;
 
-	public User() {
-
+	private User() {
+		status = UserStatus.REGISTERED;
 	}
 
 	public User(Long id, String username, String name, String surname) {
-		super();
+		this();
 		this.id = id;
 		this.username = username;
 		this.name = name;
 		this.surname = surname;
-		status = UserStatus.REGISTERED;
 	}
 
 	public Long getId() {
