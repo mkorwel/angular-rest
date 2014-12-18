@@ -32,7 +32,7 @@ public class StartApp {
 		get("/rest/users/:id", "application/json",
 				(req, res) -> store.get(getIdParam(req)), new JsonTransformer());
 
-		post("/rest/users/", (req, res) -> {
+		post("/rest/users", (req, res) -> {
 			User user = store.save(gson.fromJson(req.body(), User.class));
 			res.status(201);
 			res.header("Location", "/rest/users/" + user.getId());

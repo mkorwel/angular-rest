@@ -34,8 +34,9 @@ myApp.controller("UsersController", function($scope, $http){
 		});
 	}
 	
-	$scope.remove = function(id){
-		$http.delete("rest/users/" + id).success(function (){
+	$scope.remove = function(user){
+		$http.delete("rest/users/" + user.id).success(function (){
+			$scope.refresh();
 		});
 	}
 });
@@ -62,7 +63,7 @@ myApp.controller("UserAddController", function($scope, $http, $location){
 	$scope.user = {};
 	
 	$scope.save = function(){
-		$http.post("rest/users/", $scope.user).success(function (){
+		$http.post("rest/users", $scope.user).success(function (){
 			$location.path( "/" );
 		});
 	}
